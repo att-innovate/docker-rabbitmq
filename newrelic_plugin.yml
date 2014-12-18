@@ -12,7 +12,7 @@ newrelic:
   #
   # Update with your New Relic account license key:
   #
-  license_key: '1385436c45c570cb5e1ec46664b06adb03748bde'
+  license_key: '{{LICENSE_KEY}}'
   #
   # Set to '1' for verbose output, remove for normal output.
   # All output goes to stdout/stderr.
@@ -32,7 +32,7 @@ agents:
     # Note: When monitoring multiple nodes you should use the real hostnames instead of localhost
     # Uncomment the appropriate line for your version
     # RabbitMQ Default URL version 3.0
-    management_api_url: http://guest:guest@localhost:15672
+    management_api_url: http://{{RABBIT_USER}}:{{RABBIT_PASSWORD}}@localhost:{{RABBIT_MANAGE_PORT}}15672
     # RabbitMQ Default URL versions prior to 3.0
     #management_api_url: http://guest:guest@localhost:55672
     #
