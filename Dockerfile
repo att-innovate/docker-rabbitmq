@@ -25,20 +25,19 @@ EXPOSE 5672 15672 4369
 RUN apt-get -qq update > /dev/null && \
     apt-get -qq -y install ruby-full > /dev/null && \
     apt-get -qq -y install wget > /dev/null && \
-    wget https://github.com/gopivotal/newrelic_pivotal_agent/archive/pivotal_agent-1.0.5.tar.gz && \
-    tar -zxvf pivotal_agent-1.0.5.tar.gz && \
+#    wget https://github.com/gopivotal/newrelic_pivotal_agent/archive/pivotal_agent-1.0.5.tar.gz && \
+    wget https://github.com/att-innovate/newrelic_pivotal_agent/archive/master.zip && \
+    apt-get -qq -y install unzip > /dev/null && \
+    unzip master.zip && \
+#    tar -zxvf pivotal_agent-1.0.5.tar.gz && \
     gem install bundler && \
     apt-get -qq -y install make > /dev/null && \
     gem install json -v '1.8.1' && \
-    cd newrelic_pivotal_agent-pivotal_agent-1.0.5 && \
+    cd newrelic_pivotal_agent-master && \
     bundle install
 # Configure plugin
-ADD newrelic_plugin.yml /newrelic_pivotal_agent-pivotal_agent-1.0.5/config/newrelic_plugin.yml
+ADD newrelic_plugin.yml /newrelic_pivotal_agent-master/config/newrelic_plugin.yml
 ADD run_rabbit_and_monitor.sh /run_rabbit_and_monitor.sh
 RUN chmod 755 /run_rabbit_and_monitor.sh
 # RUN BOTH Rabbit and monitor
 CMD /run_rabbit_and_monitor.sh
-#CMD /usr/sbin/rabbitmq-server && /newrelic_pivotal_agent-pivotal_agent-1.0.5/pivotal_agent 
-#CMD /usr/sbin/rabbitmq-server 
-
-#  ./newrelic_pivotal_agent-pivotal_agent-1.0.5/pivotal_agent
