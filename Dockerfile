@@ -3,7 +3,8 @@
 # VERSION               0.0.1
 
 
-FROM      ubuntu:14.04
+#FROM     dockerfile/rabbitmq:latest
+FROM     ubuntu:14.04
 MAINTAINER Mikael Gueck "gumi@iki.fi"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -19,24 +20,21 @@ RUN echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
 
 EXPOSE 5672 15672 4369
 
-# Install Ruby for New Relic Rabbit MQ Plugin
-# Download the New Relic Plugin
-# Update last JSON version
 RUN apt-get -qq update > /dev/null && \
-    apt-get -qq -y install ruby-full > /dev/null && \
     apt-get -qq -y install wget > /dev/null && \
-#    wget https://github.com/gopivotal/newrelic_pivotal_agent/archive/pivotal_agent-1.0.5.tar.gz && \
-    wget https://github.com/att-innovate/newrelic_pivotal_agent/archive/master.zip && \
-    apt-get -qq -y install unzip > /dev/null && \
-    unzip master.zip && \
-#    tar -zxvf pivotal_agent-1.0.5.tar.gz && \
-    gem install bundler && \
-    apt-get -qq -y install make > /dev/null && \
-    gem install json -v '1.8.1' && \
-    cd newrelic_pivotal_agent-master && \
-    bundle install
-# Configure plugin
-ADD newrelic_plugin.yml /newrelic_pivotal_agent-master/config/newrelic_plugin.yml
+    wget https://pypi.python.org/packages/source/n/newrelic_plugin_agent/newrelic_plugin_agent-1.3.0.tar.gz && \
+    tar -xvf newrelic_plugin_agent-1.3.0.tar.gz && \
+    apt-get -qq -y install python2.7 && \
+    wget https://bootstrap.pypa.io/get-pip.py && \
+    python2.7 get-pip.py && \
+    cd newrelic_plugin_agent-1.3.0 && \
+    pip install newrelic-plugin-agent && \
+    mkdir -p /etc/newrelic && \
+    mkdir -p /var/log/newrelic && \
+    mkdir -p /var/run/newrelic 
+
+
+ADD newrelic-plugin-agent.cfg /etc/newrelic/newrelic-plugin-agent.cfg
 ADD run_rabbit_and_monitor.sh /run_rabbit_and_monitor.sh
 RUN chmod 755 /run_rabbit_and_monitor.sh
 # RUN BOTH Rabbit and monitor
